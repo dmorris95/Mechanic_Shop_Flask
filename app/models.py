@@ -22,8 +22,9 @@ class Customer(Base):
     name: Mapped[str] = mapped_column(db.String(100), nullable=False)
     email: Mapped[str] = mapped_column(db.String(100), nullable=False)
     phone: Mapped[str] = mapped_column(db.String(20), nullable=False)
+    password: Mapped[str] = mapped_column(db.String(50), nullable=False)
 
-    tickets: Mapped[List["Ticket"]] = db.relationship(back_populates="customer")
+    tickets: Mapped[List["Ticket"]] = db.relationship(back_populates="customer", cascade="all, delete")
 
 class Ticket(Base):
     __tablename__ = "service_tickets"

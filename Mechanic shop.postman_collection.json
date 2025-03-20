@@ -191,16 +191,55 @@
 		{
 			"name": "Delete Customer",
 			"request": {
-				"method": "GET",
-				"header": []
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDIxNDk0NzgsImlhdCI6MTc0MjE0NTg3OCwic3ViIjoiMSJ9.JeJrV2Ir1-4WTM_SRmBid-3WMpwlBq2Y20S3dlEDPwU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/customers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"customers"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "Delete Mechanic",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/mechanics/2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"mechanics",
+						"2"
+					]
+				}
 			},
 			"response": []
 		},
@@ -240,6 +279,22 @@
 						"tickets"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Customer Tickets",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
