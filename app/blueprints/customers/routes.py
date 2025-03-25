@@ -51,7 +51,7 @@ def create_customer():
     return customer_schema.jsonify(new_customer), 201
 
 @customers_bp.route("/", methods=['GET'])
-# @cache.cached(timeout=60)
+@cache.cached(timeout=60)
 def get_customers():
     try:
         page = int(request.args.get('page'))

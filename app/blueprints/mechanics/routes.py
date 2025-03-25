@@ -63,6 +63,6 @@ def experienced_mechanic():
     query = select(Mechanic)
     mechanics = db.session.execute(query).scalars().all()
 
-    mechanics.sort(key = lambda mechanic: len(mechanic.tickets))
+    mechanics.sort(key = lambda mechanic: len(mechanic.tickets), reverse=True)
 
     return mechanics_schema.jsonify(mechanics)
