@@ -139,10 +139,21 @@ paths:
               $ref: "#/definitions/CustomerTickets"
             examples:
               application/json:
-                VIN: "33334444555511119"
-                customer_id: 1
-                service_date: "2025-02-25"
-                service_desc: "Changed oil and rotated tires"
+                VIN: "111222333444555"
+            customer_id: 1
+            service_date: "2025-03-02"
+            service_desc: "Changed Oil"
+            mechanic:
+              - id: 1
+                name: John Wrench
+                email: wrenchman@email.com
+                phone: "1112223334"
+                salary: 55000
+            parts:
+              - id: 1
+                name: "Oil Filter"
+                price: 10.99
+                
   
   #### MECHANICS ####
 
@@ -221,6 +232,7 @@ paths:
           examples:
             application/json:
               message: "Successfully deleted mechanic <mechanic_id>"
+ 
   /mechanics/experience:
     get:
       tags:
@@ -232,6 +244,164 @@ paths:
           description: "Retrieved Sorted Mechanics Successfully"
           schema:
             $ref: "#/definitions/ExperiencedMechanics"
+
+  #### INVENTORY ####
+
+  /inventory:
+    post:
+      tags:
+        - Inventory
+      summary: "Endpoint to create a part"
+      description: " Endpoint to create a new part in the mechanic shop database"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information required to create a new part"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateInventoryPayload"
+      responses:
+        201:
+          description: "Successful Part Creation"
+          schema:
+            $ref: "#/definitions/CreateInventoryResponse"
+          examples:
+            application/json:
+              id: 1
+              name: "Brake Pad"
+              price: 22.99
+
+    get:
+      tags:
+        - Inventory
+      summary: "Returns all Inventory"
+      description: "Endpoint to retrieve a list of all Inventory"
+      responses:
+        200:
+          description: "Retrieved Inventory Successfully"
+          schema:
+            $ref: "#/definitions/AllInventory"
+
+  /inventory/{id}:
+    put:
+      tags:
+        - Inventory
+      summary: "Endpoint to update a Part"
+      description: "Endpoint to update a Part in the mechanic shop database"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information required to update a Part"
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateInventoryPayload"
+      responses:
+        200:
+          description: "Successfully Updated Part"
+          schema:
+            $ref: "#/definitions/UpdateInventoryResponse"
+          examples:
+            application/json:
+              id: 1
+              name: "Brake Pad"
+              price: 19.50
+    delete:
+      tags:
+        - Inventory
+      summary: "Delete a Part"
+      description: "Endpoint to delete a part from the mechanic shop database"
+      response:
+        200:
+          description: "Successfully deleted part"
+          schema:
+            $ref: "#/definitions/DeleteInventoryResponse"
+          examples:
+            application/json:
+              message: "Successfully deleted part <part_id>"
+ 
+  #### SERVICE-TICKETS ####
+
+  /tickets:
+    post:
+      tags:
+        - Tickets
+      summary: "Create a service ticket"
+      description: "Endpoint for creating a service ticket in the mechanic shop database"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information required to create a new ticket"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateTicketPayload"
+      responses:
+        201:
+          description: "Successful Ticket Creation"
+          schema:
+            $ref: "#/definitions/CreateTicketResponse"
+          examples:
+            application/json:
+              VIN: "111222333444555"
+              customer_id: 1
+              service_date: "2025-03-02"
+              service_desc: "Changed Oil"
+              mechanic:
+                - id: 1
+                  name: John Wrench
+                  email: wrenchman@email.com
+                  phone: "1112223334"
+                  salary: 55000
+              parts: []
+    
+    get:
+      tags:
+        - Tickets
+      summary: "Endpoint to get all tickets"
+      description: "Endpoint to gather all service tickets from the mechanic shop database"
+      responses:
+        200:
+          description: "Retrieved Tickets Successfully"
+          schema:
+            $ref: "#/definitions/AllTickets"
+ 
+  /tickets/{id}/edit:
+    put:
+      tags:
+        - Tickets
+      summary: "Add and/or Remove Mechanics from Ticket"
+      description: "Endpoint for adding and/or removing mechanics from a service ticket"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Ids to add or remove from Ticket"
+          required: true
+          schema:
+            $ref: "#/definitions/EditTicketPayload"
+      responses:
+        200: 
+          description: "Successful Ticket Update"
+          schema:
+            $ref: "#/definitions/EditTicketResponse"
+  
+  /tickets/{id}/add-part:
+    put:
+      tags:
+        - Tickets
+      summary: "Add a Part to a Service Ticket"
+      description: "Endpoint for adding a part to a service ticket from a service ticket"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Part IDs to add to Ticket"
+          required: true
+          schema:
+            $ref: "#/definitions/AddPartTicketPayload"
+      responses:
+        200: 
+          description: "Part(s) successfully added to Ticket"
+          schema:
+            $ref: "#/definitions/AddPartTicketResponse"
+  
 
 definitions:
 
@@ -385,7 +555,7 @@ definitions:
                 format: "float"
 
 
-  #### Mechanics #####
+  #### MECHANICS #####
 
   CreateMechanicPayload:
     type: "object"
@@ -489,3 +659,288 @@ definitions:
           type: "string"
         salary:
           type: "number"
+
+  #### INVENTORY #####
+
+  CreateInventoryPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+    required:
+      - name
+      - price
+  
+  CreateInventoryResponse:
+    type: "object"
+    properties:
+      id: 
+        type: "integer"
+      name: 
+        type: "string"
+      price:
+        type: "number"
+
+  AllInventory:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        price:
+          type: "number"
+
+  UpdateInventoryPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      price:
+        type: "number"
+        format: "float"
+
+    required:
+      - name
+      - price
+  
+  UpdateInventoryResponse:
+    type: "object"
+    properties:
+      id: 
+        type: "integer"
+      name: 
+        type: "string"
+      price:
+        type: "number"
+  
+  DeleteInventoryResponse:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+
+  #### SERVICE-TICKETS ####
+
+  CreateTicketPayload:
+    type: "object"
+    properties:
+      VIN:
+        type: "string"
+      service_date:
+        type: "string"
+        format: date
+      service_desc:
+        type: "string"
+      customer_id:
+        type: "integer"
+      mechanic_ids:
+        type: "array"
+        items:
+          type: "integer"
+
+    required:
+      - VIN
+      - service_date
+      - service_desc
+      - customer_id
+      - mechanic_ids
+  
+  CreateTicketResponse:
+    type: "object"
+    properties:
+      VIN:
+        type: "string"
+      customer_id:
+        type: "integer"
+      service_date:
+        type: "string"
+        format: date
+      service_desc:
+        type: "string"
+      mechanic:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            email:
+              type: "string"
+            phone:
+              type: "string"
+            salary:
+              type: "number"
+              format: "float"
+      parts:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            price:
+              type: "number"
+              format: "float"
+  
+  AllTickets:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        VIN:
+          type: "string"
+        customer_id:
+          type: "integer"
+        service_date:
+          type: "string"
+          format: date
+        service_desc:
+          type: "string"
+        mechanic:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              name:
+                type: "string"
+              email:
+                type: "string"
+              phone:
+                type: "string"
+              salary:
+                type: "number"
+                format: "float"
+        parts:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              name:
+                type: "string"
+              price:
+                type: "number"
+                format: "float"
+  
+  EditTicketPayload:
+    type: "object"
+    properties: 
+      add_ids:
+        type: "array"
+        items:
+          type: "integer"
+      remove_ids:
+        type: "array"
+        items:
+          type: "integer"
+    
+    required:
+      - add_ids
+      - remove_ids
+  
+  EditTicketResponse:
+    type: "object"
+    properties:
+      VIN:
+        type: "string"
+      customer_id:
+        type: "integer"
+      service_date:
+        type: "string"
+        format: date
+      service_desc:
+        type: "string"
+      mechanic:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            email:
+              type: "string"
+            phone:
+              type: "string"
+            salary:
+              type: "number"
+              format: "float"
+      parts:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            price:
+              type: "number"
+              format: "float"
+
+  AddPartTicketPayload:
+    type: "object"
+    properties:
+      add_ids:
+        type: "array"
+        items:
+          type: "integer"
+    
+    required:
+      - add_ids
+  
+  AddPartTicketResponse:
+    type: "object"
+    properties:
+      VIN:
+        type: "string"
+      customer_id:
+        type: "integer"
+      service_date:
+        type: "string"
+        format: date
+      service_desc:
+        type: "string"
+      mechanic:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            email:
+              type: "string"
+            phone:
+              type: "string"
+            salary:
+              type: "number"
+              format: "float"
+      parts:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            price:
+              type: "number"
+              format: "float"
