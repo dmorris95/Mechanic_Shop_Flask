@@ -3,9 +3,9 @@ info:
   title: "Mechanic Shop API"
   description: "Mechanic Shop API"
   version: "1.0.0"
-host: "127.0.0.1:5000"
+host: "mechanic-shop-flask.onrender.com"
 schemes:
-  - "http"
+  - "https"
 consumes:
   - "application/json"
 produces:
