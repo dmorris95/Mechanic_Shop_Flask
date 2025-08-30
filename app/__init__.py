@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect
 from app.models import db
 from app.extensions import ma, limiter, cache
 from app.blueprints.customers import customers_bp 
@@ -22,6 +22,10 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(f"config.{config_name}")
+
+    @app.get("/")
+    def home():
+        return redirect("/api/docs", code=302)
     
     db.init_app(app)
     ma.init_app(app)
